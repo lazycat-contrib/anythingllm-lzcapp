@@ -1,0 +1,44 @@
+application:
+  subdomain: anythingllm
+  multi_instance: false
+  # first-run web wizard lets the user create the admin account themselves
+  # (no email required), so public_path is safe here (papra precedent).
+  public_path:
+    - /
+  upstreams:
+    - location: /package-licenses/
+      backend: file:///lzcapp/pkg/content/licenses/
+    - location: /
+      backend: http://anythingllm:3001/
+services:
+  anythingllm:
+    # upstream: mintplexlabs/anythingllm:1.19.0
+    image: docker.1ms.run/mintplexlabs/anythingllm:1.19.0
+    environment:
+      - TZ=Asia/Shanghai
+      - STORAGE_DIR=/app/server/storage
+      # pinned so sessions survive container recreation (koillection precedent)
+      - JWT_SECRET={{ printf "%x" (stable_secret "anythingllm_jwt") }}
+    binds:
+      - /lzcapp/var/data:/app/server/storage
+usage: |
+  AnythingLLM 是一个一体化 AI 工作台：连接 OpenAI / 本地 Ollama 等各类 LLM，
+  把 PDF、Word、网页等文档切成向量索引，支持多用户在聊天中引用知识库回答，
+  还能搭自定义 AI Agent。
+
+  使用方法：
+  1. 打开应用，首次进入会出现初始化向导，按提示自行设置管理员密码
+     （无需邮箱验证，建号完全自助）。
+  2. 在向导里选择 LLM 提供方并填入对应的 API Key（或指向你的本地模型地址）。
+  3. 上传文档建立工作区知识库，之后在聊天中即可引用。
+
+  数据与安全：
+  - 管理员账号由首次向导自助创建，应用自带登录鉴权，因此本包对外开放访问
+    （public_path），入口即 AnythingLLM 自己的登录页。
+  - 数据（含向量库与上传文档）保存在 /lzcapp/var/data，卸载应用会一并删除，
+    请定期备份。
+  - JWT 密钥已固定，容器重建后登录会话不会失效。
+  - 许可为 MIT，正文见 /package-licenses/ 。
+
+  说明：
+  - 本包未做实机验证，功能以官方文档为准，遇到问题请反馈。

@@ -1,0 +1,18 @@
+package: community.lazycat.app.anythingllm
+name: anythingllm
+version: 1.19.0
+description: "All-in-one AI workspace: chat with local or hosted LLMs, embed documents into a private RAG knowledge base, and build custom AI agents."
+min_os_version: "1.5.0"
+homepage: https://github.com/Mintplex-Labs/anything-llm
+author: Mintplex-Labs
+license: MIT
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: AnythingLLM 全能 AI 工作台
+    description: "一体化 AI 应用：连接本地或云端 LLM，把文档嵌入私有 RAG 知识库，构建自定义 AI Agent。"
+  en:
+    name: AnythingLLM
+    description: "All-in-one AI app: chat with LLMs, build a private RAG knowledge base from documents, and create custom AI agents."
